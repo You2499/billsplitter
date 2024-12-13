@@ -24,7 +24,7 @@ export function SetupModal({ show, onClose, foodData, updateFoodData }: SetupMod
   useEffect(() => {
     if (show) {
       setStep(foodData.setupStep || 0);
-      setTotalBillAmount(foodData.totalBillAmount?.toString() || '');
+      setTotalBillAmount('');
       setNumberOfPeople('');
       setNames(foodData.peopleNames || []);
       setSinglePayerIndex(foodData.singlePayer?.index ?? -1);

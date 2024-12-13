@@ -37,7 +37,9 @@ export function useFoodData() {
           setFoodData({
             ...initialFoodData,
             ...getRequest.result,
-            showLandingPage: getRequest.result.showLandingPage ?? true
+            showLandingPage: getRequest.result.showLandingPage ?? true,
+            totalBillAmount: getRequest.result.totalBillAmount || 0,
+            numberOfPeople: getRequest.result.numberOfPeople || 0
           });
         }
       };
@@ -61,7 +63,9 @@ export function useFoodData() {
       
       const dataToStore = {
         ...initialFoodData,
-        ...newData
+        ...newData,
+        totalBillAmount: newData.totalBillAmount || 0,
+        numberOfPeople: newData.numberOfPeople || 0
       };
       
       objectStore.put(dataToStore);
@@ -72,7 +76,9 @@ export function useFoodData() {
       console.error('Failed to update IndexedDB');
       setFoodData({
         ...initialFoodData,
-        ...newData
+        ...newData,
+        totalBillAmount: newData.totalBillAmount || 0,
+        numberOfPeople: newData.numberOfPeople || 0
       });
     };
   };
