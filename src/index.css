@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sf: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  
+  body {
+    font-family: var(--font-sf);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    @apply bg-gray-50 dark:bg-gray-900;
+    font-size: 16px;
+  }
+
+  input[type="number"],
+  input[type="text"],
+  select {
+    font-size: 16px !important;
+    @apply appearance-none;
+  }
+
+  input[type="number"] {
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus,
+  button:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  @media screen and (max-width: 768px) {
+    input[type="number"],
+    input[type="text"],
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 1.2em;
+    padding-right: 2rem;
+  }
+}
+
+/* Toast Styles */
+.Toastify__toast {
+  font-family: var(--font-sf) !important;
+  @apply !rounded-2xl !bg-gray-800/90 !backdrop-blur-lg !border !border-gray-700/50 !shadow-lg !mb-2 !min-h-0 !p-4;
+}
+
+.Toastify__toast-body {
+  font-family: var(--font-sf) !important;
+  @apply !p-0 !m-0 !text-white !font-medium !text-sm;
+}
+
+.Toastify__toast-container {
+  @apply !fixed !bottom-6 !mb-0 !px-4 !w-auto !min-w-[280px] !max-w-[420px] !left-1/2 !transform !-translate-x-1/2;
+}
+
+.Toastify__close-button {
+  @apply !text-white/70 hover:!text-white !p-0 !self-center;
+}
+
+.Toastify__progress-bar {
+  @apply !bg-white/20;
+}
