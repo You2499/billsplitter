@@ -19,7 +19,7 @@ export default function App() {
   // Sync with persisted state
   useEffect(() => {
     if (foodData) {
-      setShowLandingPage(foodData.showLandingPage);
+      setShowLandingPage(foodData.setupComplete ? foodData.showLandingPage : true);
       setShowSetupModal(!foodData.setupComplete);
     }
   }, [foodData]);
@@ -46,8 +46,8 @@ export default function App() {
     totalBillAmount: 0
   };
 
-  // First time visit
-  if (!foodData && showLandingPage) {
+  // Show landing page for new users or when explicitly requested
+  if (!foodData || showLandingPage) {
     return (
       <div className="min-h-screen">
         <AppLayout 
@@ -93,28 +93,18 @@ export default function App() {
         }}
         showInfoButton={!showLandingPage}
       >
-        {showLandingPage ? (
-          <LandingPage onStartSplit={() => {
-            setShowLandingPage(false);
-            updateFoodData({
-              ...(foodData || initialFoodData),
-              showLandingPage: false
-            });
-          }} />
-        ) : (
-          <main className="container mx-auto max-w-5xl">
-            <BillInputs
-              tip={tip}
-              tax={tax}
-              onTipChange={(value) => handleTipTaxChange(value, 'tip')}
-              onTaxChange={(value) => handleTipTaxChange(value, 'tax')}
-            />
-            <FoodTable 
-              foodData={foodData || initialFoodData} 
-              updateFoodData={updateFoodData}
-            />
-          </main>
-        )}
+        <main className="container mx-auto max-w-5xl">
+          <BillInputs
+            tip={tip}
+            tax={tax}
+            onTipChange={(value) => handleTipTaxChange(value, 'tip')}
+            onTaxChange={(value) => handleTipTaxChange(value, 'tax')}
+          />
+          <FoodTable 
+            foodData={foodData || initialFoodData} 
+            updateFoodData={updateFoodData}
+          />
+        </main>
         <SetupModal
           show={showSetupModal}
           onClose={() => {
