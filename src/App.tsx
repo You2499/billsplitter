@@ -17,6 +17,20 @@ export default function App() {
   const { theme } = useTheme();
   const { foodData, updateFoodData, resetFoodData } = useFoodData();
   
+  const initialFoodData: FoodData = {
+    id: 1,
+    numberOfPeople: 0,
+    peopleNames: [],
+    items: [],
+    tip: '',
+    tax: '',
+    singlePayer: null,
+    setupComplete: false,
+    setupStep: 0,
+    showLandingPage: true,
+    totalBillAmount: 0
+  };
+  
   // Sync with persisted state
   useEffect(() => {
     if (foodData) {
@@ -33,20 +47,6 @@ export default function App() {
     setShowLandingPage 
   });
 
-  const initialFoodData: FoodData = {
-    id: 1,
-    numberOfPeople: 0,
-    peopleNames: [],
-    items: [],
-    tip: '',
-    tax: '',
-    singlePayer: null,
-    setupComplete: false,
-    setupStep: 0,
-    showLandingPage: true,
-    totalBillAmount: 0
-  };
-
   // Show landing page for new users or when explicitly requested
   if (!foodData || showLandingPage) {
     return (
@@ -59,13 +59,19 @@ export default function App() {
           showInfoButton={false}
         >
           <LandingPage onStartSplit={() => {
-            const newFoodData = {
-              ...initialFoodData,
-              showLandingPage: false
-            };
-            updateFoodData(newFoodData);
             setShowLandingPage(false);
             setShowSetupModal(true);
+            if (!foodData) {
+              updateFoodData({
+                ...initialFoodData,
+                showLandingPage: false
+              });
+            } else {
+              updateFoodData({
+                ...foodData,
+                showLandingPage: false
+              });
+            }
           }} />
         </AppLayout>
         <ToastContainer
