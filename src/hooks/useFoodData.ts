@@ -18,7 +18,9 @@ export function useFoodData() {
           tax: '',
           singlePayer: null,
           setupComplete: false,
-          setupStep: 0
+          setupStep: 0,
+          showLandingPage: true,
+          totalBillAmount: 0
         });
       };
 
@@ -40,7 +42,9 @@ export function useFoodData() {
               tax: result.tax || '',
               singlePayer: result.singlePayer || null,
               setupComplete: result.setupComplete || false,
-              setupStep: result.setupStep || 0
+              setupStep: result.setupStep || 0,
+              showLandingPage: result.showLandingPage ?? true,
+              totalBillAmount: result.totalBillAmount || 0
             });
           } else {
             setFoodData({
@@ -52,7 +56,9 @@ export function useFoodData() {
               tax: '',
               singlePayer: null,
               setupComplete: false,
-              setupStep: 0
+              setupStep: 0,
+              showLandingPage: true,
+              totalBillAmount: 0
             });
           }
         };
@@ -74,7 +80,9 @@ export function useFoodData() {
         tax: '',
         singlePayer: null,
         setupComplete: false,
-        setupStep: 0
+        setupStep: 0,
+        showLandingPage: true,
+        totalBillAmount: 0
       });
     }
   }, []);
@@ -97,7 +105,9 @@ export function useFoodData() {
         tax: newData.tax || '',
         singlePayer: newData.singlePayer || null,
         setupComplete: newData.setupComplete || false,
-        setupStep: newData.setupStep || 0
+        setupStep: newData.setupStep || 0,
+        showLandingPage: newData.showLandingPage ?? true,
+        totalBillAmount: newData.totalBillAmount || 0
       };
       
       objectStore.put(dataToStore);
