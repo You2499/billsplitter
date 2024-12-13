@@ -59,12 +59,13 @@ export default function App() {
           showInfoButton={false}
         >
           <LandingPage onStartSplit={() => {
-            setShowLandingPage(false);
-            setShowSetupModal(true);
-            updateFoodData({
+            const newFoodData = {
               ...initialFoodData,
               showLandingPage: false
-            });
+            };
+            updateFoodData(newFoodData);
+            setShowLandingPage(false);
+            setShowSetupModal(true);
           }} />
         </AppLayout>
         <ToastContainer
