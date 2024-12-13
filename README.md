@@ -13,19 +13,19 @@ A modern web application for splitting bills among friends with ease. Built with
 
 ## Tech Stack
 
-- React 18
-- TypeScript
-- Vite
-- Tailwind CSS
-- Framer Motion
+- React 18 with TypeScript
+- Vite for fast development and building
+- Tailwind CSS for styling
+- Framer Motion for animations
 - IndexedDB for local storage
-- Lucide Icons
+- Lucide Icons for beautiful UI elements
+- React Toastify for notifications
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 16+ and npm
+- Node.js 18+ and npm
 
 ### Installation
 
