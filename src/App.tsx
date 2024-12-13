@@ -25,9 +25,42 @@ const initialFoodData: FoodData = {
   totalBillAmount: 0
 };
 
+function InfoModal({ show, onClose }: { show: boolean; onClose: () => void }) {
+  if (!show) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white dark:bg-gray-800 p-8 rounded-lg max-w-2xl w-full m-4 shadow-xl">
+        <h2 className="text-2xl font-bold mb-4">About Bill Splitter</h2>
+        <div className="space-y-6">
+          <div>
+            <h3 className="font-semibold mb-2">Easy Setup</h3>
+            <p className="text-gray-600 dark:text-gray-300">Enter bill details and add people in just a few steps</p>
+          </div>
+          <div>
+            <h3 className="font-semibold mb-2">Smart Splitting</h3>
+            <p className="text-gray-600 dark:text-gray-300">Specify who participated in each item for accurate splitting</p>
+          </div>
+          <div>
+            <h3 className="font-semibold mb-2">Single Payer Mode (Beta)</h3>
+            <p className="text-gray-600 dark:text-gray-300">Handle scenarios where one person pays a larger share</p>
+          </div>
+        </div>
+        <button
+          onClick={onClose}
+          className="mt-6 w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [showSetupModal, setShowSetupModal] = useState(false);
   const [showLandingPage, setShowLandingPage] = useState(true);
+  const [showInfoModal, setShowInfoModal] = useState(false);
   const { theme } = useTheme();
   const { foodData, updateFoodData, resetFoodData } = useFoodData();
 
@@ -85,13 +118,7 @@ export default function App() {
         theme={theme} 
         showNewSplit={true} 
         onNewSplit={handleNewSplit}
-        onInfoClick={() => {
-          setShowLandingPage(true);
-          updateFoodData({
-            ...(foodData || initialFoodData),
-            showLandingPage: true
-          });
-        }}
+        onInfoClick={() => setShowInfoModal(true)}
         showInfoButton={true}
       >
         <main className="container mx-auto max-w-5xl">
@@ -117,6 +144,10 @@ export default function App() {
           }}
           foodData={foodData || initialFoodData}
           updateFoodData={updateFoodData}
+        />
+        <InfoModal 
+          show={showInfoModal}
+          onClose={() => setShowInfoModal(false)}
         />
       </AppLayout>
       <ToastContainer
