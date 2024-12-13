@@ -11,31 +11,31 @@ import { useAppState } from './hooks/useAppState';
 import { AppLayout } from './components/AppLayout';
 import type { FoodData } from './types';
 
+const initialFoodData: FoodData = {
+  id: 1,
+  numberOfPeople: 0,
+  peopleNames: [],
+  items: [],
+  tip: '',
+  tax: '',
+  singlePayer: null,
+  setupComplete: false,
+  setupStep: 0,
+  showLandingPage: true,
+  totalBillAmount: 0
+};
+
 export default function App() {
   const [showSetupModal, setShowSetupModal] = useState(false);
   const [showLandingPage, setShowLandingPage] = useState(true);
   const { theme } = useTheme();
   const { foodData, updateFoodData, resetFoodData } = useFoodData();
-  
-  const initialFoodData: FoodData = {
-    id: 1,
-    numberOfPeople: 0,
-    peopleNames: [],
-    items: [],
-    tip: '',
-    tax: '',
-    singlePayer: null,
-    setupComplete: false,
-    setupStep: 0,
-    showLandingPage: true,
-    totalBillAmount: 0
-  };
-  
+
   // Sync with persisted state
   useEffect(() => {
     if (foodData) {
-      setShowLandingPage(foodData.setupComplete ? foodData.showLandingPage : true);
-      setShowSetupModal(!foodData.setupComplete);
+      setShowLandingPage(foodData.showLandingPage);
+      setShowSetupModal(!foodData.setupComplete && !foodData.showLandingPage);
     }
   }, [foodData]);
 
@@ -48,7 +48,7 @@ export default function App() {
   });
 
   // Show landing page for new users or when explicitly requested
-  if (!foodData || showLandingPage) {
+  if (showLandingPage) {
     return (
       <div className="min-h-screen">
         <AppLayout 
@@ -61,17 +61,10 @@ export default function App() {
           <LandingPage onStartSplit={() => {
             setShowLandingPage(false);
             setShowSetupModal(true);
-            if (!foodData) {
-              updateFoodData({
-                ...initialFoodData,
-                showLandingPage: false
-              });
-            } else {
-              updateFoodData({
-                ...foodData,
-                showLandingPage: false
-              });
-            }
+            updateFoodData({
+              ...initialFoodData,
+              showLandingPage: false
+            });
           }} />
         </AppLayout>
         <ToastContainer
@@ -99,7 +92,7 @@ export default function App() {
             showLandingPage: true
           });
         }}
-        showInfoButton={!showLandingPage}
+        showInfoButton={true}
       >
         <main className="container mx-auto max-w-5xl">
           <BillInputs

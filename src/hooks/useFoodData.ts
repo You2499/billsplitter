@@ -16,128 +16,83 @@ const initialFoodData: FoodData = {
 };
 
 export function useFoodData() {
-  const [foodData, setFoodData] = useState<FoodData | null>(null);
+  const [foodData, setFoodData] = useState<FoodData>(initialFoodData);
 
   useEffect(() => {
-    try {
-      const request = window.indexedDB.open('FoodSplitterDB', 1);
+    const request = window.indexedDB.open('FoodSplitterDB', 1);
 
-      request.onerror = () => {
-        console.error('Failed to open IndexedDB');
-        setFoodData(initialFoodData);
-      };
+    request.onerror = () => {
+      console.error('Failed to open IndexedDB');
+      setFoodData(initialFoodData);
+    };
 
-      request.onsuccess = (event) => {
-        const db = (event.target as IDBOpenDBRequest).result;
-        const transaction = db.transaction(['foodData'], 'readonly');
-        const objectStore = transaction.objectStore('foodData');
-        const getRequest = objectStore.get(1);
+    request.onsuccess = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      const transaction = db.transaction(['foodData'], 'readonly');
+      const objectStore = transaction.objectStore('foodData');
+      const getRequest = objectStore.get(1);
 
-        getRequest.onsuccess = () => {
-          if (getRequest.result) {
-            const result = getRequest.result;
-            setFoodData({
-              ...initialFoodData,
-              ...result,
-              showLandingPage: result.showLandingPage ?? true
-            });
-          } else {
-            setFoodData(initialFoodData);
-          }
-        };
-
-        getRequest.onerror = () => {
-          console.error('Failed to get data from IndexedDB');
-          setFoodData(initialFoodData);
-        };
-      };
-
-      request.onupgradeneeded = (event) => {
-        const db = (event.target as IDBOpenDBRequest).result;
-        if (!db.objectStoreNames.contains('foodData')) {
-          db.createObjectStore('foodData', { keyPath: 'id' });
+      getRequest.onsuccess = () => {
+        if (getRequest.result) {
+          setFoodData({
+            ...initialFoodData,
+            ...getRequest.result,
+            showLandingPage: getRequest.result.showLandingPage ?? true
+          });
         }
       };
-    } catch (err: unknown) {
-      console.error('IndexedDB error:', err);
-      setFoodData(initialFoodData);
-    }
+    };
+
+    request.onupgradeneeded = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      if (!db.objectStoreNames.contains('foodData')) {
+        db.createObjectStore('foodData', { keyPath: 'id' });
+      }
+    };
   }, []);
 
   const updateFoodData = (newData: FoodData) => {
-    try {
-      const request = window.indexedDB.open('FoodSplitterDB', 1);
+    const request = window.indexedDB.open('FoodSplitterDB', 1);
 
-      request.onsuccess = (event) => {
-        const db = (event.target as IDBOpenDBRequest).result;
-        const transaction = db.transaction(['foodData'], 'readwrite');
-        const objectStore = transaction.objectStore('foodData');
-        
-        const dataToStore = {
-          ...initialFoodData,
-          ...newData,
-          showLandingPage: newData.showLandingPage ?? true
-        };
-        
-        const putRequest = objectStore.put(dataToStore);
-        
-        putRequest.onsuccess = () => {
-          setFoodData(dataToStore);
-        };
-
-        putRequest.onerror = () => {
-          console.error('Failed to update data in IndexedDB');
-          setFoodData(dataToStore);
-        };
+    request.onsuccess = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      const transaction = db.transaction(['foodData'], 'readwrite');
+      const objectStore = transaction.objectStore('foodData');
+      
+      const dataToStore = {
+        ...initialFoodData,
+        ...newData
       };
+      
+      objectStore.put(dataToStore);
+      setFoodData(dataToStore);
+    };
 
-      request.onerror = () => {
-        console.error('Failed to open IndexedDB for update');
-        setFoodData({
-          ...initialFoodData,
-          ...newData,
-          showLandingPage: newData.showLandingPage ?? true
-        });
-      };
-    } catch (err: unknown) {
-      console.error('IndexedDB update error:', err);
+    request.onerror = () => {
+      console.error('Failed to update IndexedDB');
       setFoodData({
         ...initialFoodData,
-        ...newData,
-        showLandingPage: newData.showLandingPage ?? true
+        ...newData
       });
-    }
+    };
   };
 
   const resetFoodData = () => {
-    try {
-      const request = window.indexedDB.open('FoodSplitterDB', 1);
+    const request = window.indexedDB.open('FoodSplitterDB', 1);
 
-      request.onsuccess = (event) => {
-        const db = (event.target as IDBOpenDBRequest).result;
-        const transaction = db.transaction(['foodData'], 'readwrite');
-        const objectStore = transaction.objectStore('foodData');
-        
-        const clearRequest = objectStore.clear();
-        
-        clearRequest.onsuccess = () => {
-          setFoodData(initialFoodData);
-        };
-
-        clearRequest.onerror = () => {
-          console.error('Failed to clear data in IndexedDB');
-          setFoodData(initialFoodData);
-        };
-      };
-
-      request.onerror = () => {
-        console.error('Failed to open IndexedDB for reset');
-        setFoodData(initialFoodData);
-      };
-    } catch (err: unknown) {
-      console.error('IndexedDB reset error:', err);
+    request.onsuccess = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      const transaction = db.transaction(['foodData'], 'readwrite');
+      const objectStore = transaction.objectStore('foodData');
+      
+      objectStore.clear();
       setFoodData(initialFoodData);
-    }
+    };
+
+    request.onerror = () => {
+      console.error('Failed to reset IndexedDB');
+      setFoodData(initialFoodData);
+    };
   };
 
   return { foodData, updateFoodData, resetFoodData };
