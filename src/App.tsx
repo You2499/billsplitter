@@ -9,6 +9,7 @@ import { useTheme } from './hooks/useTheme';
 import { useFoodData } from './hooks/useFoodData';
 import { useAppState } from './hooks/useAppState';
 import { AppLayout } from './components/AppLayout';
+import type { FoodData } from './types';
 
 export default function App() {
   const [showSetupModal, setShowSetupModal] = useState(false);
