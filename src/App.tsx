@@ -1,155 +1,91 @@
 import { useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { BillInputs } from './components/BillInputs';
-import { SetupModal } from './components/SetupModal';
-import { FoodTable } from './components/FoodTable';
-import { LandingPage } from './components/LandingPage';
-import { useTheme } from './hooks/useTheme';
-import { useFoodData } from './hooks/useFoodData';
-import { useAppState } from './hooks/useAppState';
 import { AppLayout } from './components/AppLayout';
-import type { FoodData } from './types';
-
-const initialFoodData: FoodData = {
-  id: 1,
-  numberOfPeople: 0,
-  peopleNames: [],
-  items: [],
-  tip: '',
-  tax: '',
-  singlePayer: null,
-  setupComplete: false,
-  setupStep: 0,
-  showLandingPage: true,
-  totalBillAmount: 0
-};
-
-function InfoModal({ show, onClose }: { show: boolean; onClose: () => void }) {
-  if (!show) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 p-8 rounded-lg max-w-2xl w-full m-4 shadow-xl">
-        <h2 className="text-2xl font-bold mb-4">About Bill Splitter</h2>
-        <div className="space-y-6">
-          <div>
-            <h3 className="font-semibold mb-2">Easy Setup</h3>
-            <p className="text-gray-600 dark:text-gray-300">Enter bill details and add people in just a few steps</p>
-          </div>
-          <div>
-            <h3 className="font-semibold mb-2">Smart Splitting</h3>
-            <p className="text-gray-600 dark:text-gray-300">Specify who participated in each item for accurate splitting</p>
-          </div>
-          <div>
-            <h3 className="font-semibold mb-2">Single Payer Mode (Beta)</h3>
-            <p className="text-gray-600 dark:text-gray-300">Handle scenarios where one person pays a larger share</p>
-          </div>
-        </div>
-        <button
-          onClick={onClose}
-          className="mt-6 w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  );
-}
+import { BillInputs } from './components/BillInputs';
+import { FoodTable } from './components/FoodTable';
+import { SetupModal } from './components/SetupModal';
+import { useFoodData } from './hooks/useFoodData';
 
 export default function App() {
-  const [showSetupModal, setShowSetupModal] = useState(false);
-  const [showLandingPage, setShowLandingPage] = useState(true);
-  const [showInfoModal, setShowInfoModal] = useState(false);
-  const { theme } = useTheme();
-  const { foodData, updateFoodData, resetFoodData } = useFoodData();
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const { foodData, updateFoodData } = useFoodData();
+  const [showSetupModal, setShowSetupModal] = useState(!foodData?.setupComplete);
 
-  // Sync with persisted state
   useEffect(() => {
-    if (foodData) {
-      setShowLandingPage(foodData.showLandingPage);
-      setShowSetupModal(!foodData.setupComplete && !foodData.showLandingPage);
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      setTheme('dark');
+      document.documentElement.classList.add('dark');
+    } else {
+      setTheme('light');
+      document.documentElement.classList.remove('dark');
     }
-  }, [foodData]);
+  }, []);
 
-  const { tip, tax, handleTipTaxChange, handleNewSplit } = useAppState({ 
-    foodData, 
-    updateFoodData, 
-    resetFoodData, 
-    setShowSetupModal,
-    setShowLandingPage 
-  });
+  const toggleTheme = () => {
+    setTheme(prevTheme => {
+      const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+      localStorage.theme = newTheme;
+      if (newTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      return newTheme;
+    });
+  };
 
-  // Show landing page for new users or when explicitly requested
-  if (showLandingPage) {
+  if (!foodData) {
     return (
-      <div className="min-h-screen">
-        <AppLayout 
-          theme={theme} 
-          showNewSplit={false} 
-          onNewSplit={handleNewSplit}
-          onInfoClick={() => {}}
-          showInfoButton={false}
-        >
-          <LandingPage onStartSplit={() => {
-            setShowLandingPage(false);
-            setShowSetupModal(true);
-            updateFoodData({
-              ...initialFoodData,
-              showLandingPage: false
-            });
-          }} />
-        </AppLayout>
-        <ToastContainer
-          position="bottom-center"
-          theme={theme}
-          hideProgressBar={false}
-          closeOnClick
-          pauseOnHover
-          draggable
-        />
-      </div>
+      <AppLayout theme={theme} onThemeToggle={toggleTheme}>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+              Welcome to FoodSplitter
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-8">
+              Split restaurant bills effortlessly with friends
+            </p>
+            <button
+              onClick={() => setShowSetupModal(true)}
+              className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+            >
+              Get Started
+            </button>
+          </div>
+        </div>
+      </AppLayout>
     );
   }
 
   return (
-    <div className="min-h-screen">
-      <AppLayout 
-        theme={theme} 
-        showNewSplit={true} 
-        onNewSplit={handleNewSplit}
-        onInfoClick={() => setShowInfoModal(true)}
-        showInfoButton={true}
-      >
-        <main className="container mx-auto max-w-5xl">
-          <BillInputs
-            tip={tip}
-            tax={tax}
-            onTipChange={(value) => handleTipTaxChange(value, 'tip')}
-            onTaxChange={(value) => handleTipTaxChange(value, 'tax')}
-          />
-          <FoodTable 
-            foodData={foodData || initialFoodData} 
-            updateFoodData={updateFoodData}
-          />
-        </main>
-        <SetupModal
-          show={showSetupModal}
-          onClose={() => {
-            setShowSetupModal(false);
-            updateFoodData({
-              ...(foodData || initialFoodData),
-              setupComplete: true
-            });
-          }}
-          foodData={foodData || initialFoodData}
+    <AppLayout theme={theme} onThemeToggle={toggleTheme}>
+      <div className="space-y-8">
+        <BillInputs
+          tip={foodData.tip}
+          tax={foodData.tax}
+          onTipChange={(value) => updateFoodData({ ...foodData, tip: value })}
+          onTaxChange={(value) => updateFoodData({ ...foodData, tax: value })}
+        />
+        <FoodTable 
+          foodData={foodData} 
           updateFoodData={updateFoodData}
         />
-        <InfoModal 
-          show={showInfoModal}
-          onClose={() => setShowInfoModal(false)}
-        />
-      </AppLayout>
+      </div>
+
+      <SetupModal
+        show={showSetupModal}
+        onClose={() => {
+          setShowSetupModal(false);
+          updateFoodData({
+            ...foodData,
+            setupComplete: true
+          });
+        }}
+        foodData={foodData}
+        updateFoodData={updateFoodData}
+      />
+
       <ToastContainer
         position="bottom-center"
         theme={theme}
@@ -158,6 +94,6 @@ export default function App() {
         pauseOnHover
         draggable
       />
-    </div>
+    </AppLayout>
   );
 }
