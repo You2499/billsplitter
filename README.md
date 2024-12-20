@@ -1,60 +1,56 @@
-# BillSplitter <img src="icon.svg" width="24" height="24" alt="BillSplitter Icon" align="center">
+# 💰 FoodSplitter
 
-A modern and intuitive bill splitting application that makes sharing expenses with friends, roommates, or groups effortless.
+[![React](https://img.shields.io/badge/React-18.2-blue.svg)](https://reactjs.org/)
+[![Vite](https://img.shields.io/badge/Vite-5.0-blueviolet.svg)](https://vitejs.dev/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC.svg)](https://tailwindcss.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6.svg)](https://www.typescriptlang.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 
-## Features
+A modern web application for splitting restaurant bills with friends. Built with React, TypeScript, and TailwindCSS, featuring an intuitive interface and smart bill-splitting logic.
 
-- 🧮 Split bills easily among multiple people
-- 💰 Support for different currencies
-- 🎯 Fair split calculations
-- 📱 Responsive design for mobile and desktop
-- 🔄 Real-time updates
-- 🌙 Dark mode support
+## ✨ Features
 
-## Getting Started
+- 🧮 Smart bill splitting algorithm
+- 👥 Multiple participants support
+- 💸 Tip and tax calculation
+- 🌓 Dark Mode with system preference detection
+- 📱 Fully responsive layout
+- 💾 Persistent state management
+- 🎯 Accessible UI components
 
-### Prerequisites
+## 🚀 Quick Start
 
-- Node.js (v14 or higher)
-- npm or yarn
-
-### Installation
-
-1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/billsplitter.git
-cd billsplitter
-```
+# Clone the repository
+git clone https://github.com/yourusername/foodsplitter.git
 
-2. Install dependencies
-```bash
+# Navigate to the project
+cd foodsplitter
+
+# Install dependencies
 npm install
-# or
-yarn install
-```
 
-3. Start the development server
-```bash
+# Start development server
 npm run dev
-# or
-yarn dev
 ```
 
-## Contributing
+## 🛠️ Built With
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+- [React](https://reactjs.org/) - UI Framework
+- [TypeScript](https://www.typescriptlang.org/) - Programming Language
+- [Vite](https://vitejs.dev/) - Build Tool
+- [TailwindCSS](https://tailwindcss.com/) - CSS Framework
 
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+## 📝 License
 
-## License
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## 🤝 Contributing
 
-## Acknowledgments
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/yourusername/foodsplitter/issues).
 
-- Icon designed with modern UI/UX principles
-- Built with love for the open-source community 💙 
+## 🔗 Related Projects
+
+Check out our other tools:
+- [ToolKit](https://toolkit.netlify.app/) - Collection of useful web tools
+- [GrocerySplitter](https://grocerysplitter.netlify.app/) - Manage shared grocery expenses
