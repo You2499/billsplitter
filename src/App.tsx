@@ -9,7 +9,7 @@ import { useFoodData } from './hooks/useFoodData';
 
 export default function App() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  const { foodData, updateFoodData } = useFoodData();
+  const { foodData, updateFoodData, resetFoodData } = useFoodData();
   const [showSetupModal, setShowSetupModal] = useState(!foodData?.setupComplete);
 
   useEffect(() => {
@@ -35,9 +35,18 @@ export default function App() {
     });
   };
 
+  const handleNewSplit = () => {
+    resetFoodData();
+    setShowSetupModal(true);
+  };
+
   if (!foodData) {
     return (
-      <AppLayout theme={theme} onThemeToggle={toggleTheme}>
+      <AppLayout 
+        theme={theme} 
+        onThemeToggle={toggleTheme}
+        showNewSplit={false}
+      >
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
@@ -59,7 +68,12 @@ export default function App() {
   }
 
   return (
-    <AppLayout theme={theme} onThemeToggle={toggleTheme}>
+    <AppLayout 
+      theme={theme} 
+      onThemeToggle={toggleTheme}
+      onNewSplit={handleNewSplit}
+      showNewSplit={true}
+    >
       <div className="space-y-8">
         <BillInputs
           tip={foodData.tip}

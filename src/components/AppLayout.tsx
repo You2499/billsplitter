@@ -1,15 +1,24 @@
 import { ReactNode } from 'react';
+import { Plus } from 'lucide-react';
 
 interface AppLayoutProps {
   children: ReactNode;
   theme: 'light' | 'dark';
   onThemeToggle: () => void;
+  onNewSplit?: () => void;
+  showNewSplit?: boolean;
 }
 
-export const AppLayout = ({ children, theme, onThemeToggle }: AppLayoutProps) => {
+export const AppLayout = ({ 
+  children, 
+  theme, 
+  onThemeToggle, 
+  onNewSplit, 
+  showNewSplit = false 
+}: AppLayoutProps) => {
   return (
-    <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 ${theme}`}>
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      <nav className="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
@@ -18,7 +27,16 @@ export const AppLayout = ({ children, theme, onThemeToggle }: AppLayoutProps) =>
                 {window.location.hostname.includes('food') ? 'FoodSplitter' : 'GrocerySplitter'}
               </h1>
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center space-x-4">
+              {showNewSplit && (
+                <button
+                  onClick={onNewSplit}
+                  className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                >
+                  <Plus className="w-5 h-5 mr-1" />
+                  <span>New Split</span>
+                </button>
+              )}
               <button
                 onClick={onThemeToggle}
                 className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
@@ -39,7 +57,7 @@ export const AppLayout = ({ children, theme, onThemeToggle }: AppLayoutProps) =>
         </div>
       </nav>
 
-      <main className="pt-16">
+      <main className="flex-grow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {children}
         </div>
